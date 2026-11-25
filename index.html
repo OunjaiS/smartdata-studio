@@ -160,18 +160,17 @@
     }
 
     async function loadStudio() {
+      const params = new URLSearchParams(window.location.search);
+      if (!params.get("connected")) {
+        // Before Login Kit OAuth completes, show ONLY the "Continue with TikTok" login screen
+        return;
+      }
       try {
         const res = await fetch(`${BRIDGE}/api/creator-info`);
         const data = await res.json();
         if (!data.connected) return;
 
-        // Show Login button briefly if user wants to demo Login Kit from scratch unless ?connected=1
-        const params = new URLSearchParams(window.location.search);
-        if (!params.get("connected")) {
-          // Still show login card at top so reviewer sees Login Kit button, plus studio below!
-        } else {
-          document.getElementById("loginSection").style.display = "none";
-        }
+        document.getElementById("loginSection").style.display = "none";
         document.getElementById("studioSection").style.display = "grid";
 
         const u = data.user || {};
